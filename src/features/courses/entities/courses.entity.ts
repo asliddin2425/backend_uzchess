@@ -9,7 +9,7 @@ import {
 import { BaseModel } from "../../../core/base-model.js";
 import { Author } from "./author.entity.js";
 import { Language } from "./language.entity.js";
-// import { CourseLike } from "./courses-like.entity.js";
+import { CourseReview } from "./course-review.entity.js";
 import { Level } from "./level.entity.js";
 import { Section } from "./section.entity.js";
 import { Category } from "./category.entity.js";
@@ -70,8 +70,6 @@ export class Course extends BaseModel {
     @JoinColumn({name: "categoryId"})
     category!: Relation<Category>;
 
-
-
-    // @OneToMany(() => CourseLike, like => like.course)
-    // likes!: Relation<CourseLike[]>;
+    @OneToMany(() => CourseReview, review => review.course)
+    reviews?: Relation<CourseReview[]>;
 }

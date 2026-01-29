@@ -1,6 +1,7 @@
 import {BaseModel} from "../../../core/base-model.js";
-import {Column, Entity} from "typeorm";
+import {Column, Entity, OneToMany, Relation} from "typeorm";
 import { Roles } from "../../../core/constants/roles.js";
+import { CourseReview } from "../../courses/entities/course-review.entity.js";
 
 
 @Entity("users")
@@ -19,4 +20,7 @@ export class User extends BaseModel {
 
     @Column({type: "enum", enum: Roles, default: Roles.User})
     role!: Roles;
+
+    @OneToMany(() => CourseReview, review => review.user)
+    courseReviews?: Relation<CourseReview[]>;
 }

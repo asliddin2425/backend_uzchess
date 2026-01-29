@@ -10,6 +10,8 @@ import { categoryRouter } from "./features/courses/controllers/category.controll
 import { levelRouter } from "./features/courses/controllers/level.controller.js";
 import { sectionRouter } from "./features/courses/controllers/section.controller.js";
 import { languageRouter } from "./features/courses/controllers/languages.controller.js";
+import { uploadsRouter } from "./features/uploads/uploads.controller.js";
+import { courseReviewRouter } from "./features/courses/controllers/course.review.controller.js";
 
 
 await AppDataSource.initialize();
@@ -17,6 +19,7 @@ await AppDataSource.initialize();
 const app = express();
 
 app.use(express.json());
+app.use("/", uploadsRouter)
 app.use("/", user);
 app.use("/", authorRouter);
 app.use("/", courseRouter);
@@ -24,6 +27,7 @@ app.use("/", categoryRouter)
 app.use("/", levelRouter)
 app.use("/", sectionRouter);
 app.use("/", languageRouter)
+app.use("/", courseReviewRouter)
 
 
 setupSwagger(app);

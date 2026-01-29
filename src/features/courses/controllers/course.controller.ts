@@ -2,8 +2,10 @@ import { Router } from "express";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
 import { Course } from "../entities/courses.entity.js";
 import { upload } from "../../../core/middlewares/upload.middleware.js";
-import { CourseCreate } from "../dto/course/course.create.js";
-import { CourseUpdate } from "../dto/course/course.update.js";
+import { CourseCreate } from "../dtos/course/course.create.js";
+import { CourseUpdate } from "../dtos/course/course.update.js";
+import {plainToInstance} from "class-transformer";
+import { CourseList } from "../dtos/course/course.list.js";
 
  export const courseRouter = Router();
 
@@ -54,6 +56,7 @@ import { CourseUpdate } from "../dto/course/course.update.js";
  */
 courseRouter.get("/courses", async (req, res) => {
     let courses = await Course.find();
+    let data = plainToInstance(CourseList, courses);
     return res.status(200).json(courses)
 })
 

@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import { Section } from "../entities/section.entity.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
-import { SectionUpdate } from "../dto/section/section.update.js";
-import { SectionCreate } from "../dto/section/section.create.js";
-import { SectionList } from "../dto/section/section.list.js";
+import { SectionUpdate } from "../dtos/section/section.update.js";
+import { SectionCreate } from "../dtos/section/section.create.js";
+import { SectionList } from "../dtos/section/section.list.js";
 
 export const  sectionRouter = Router();
 

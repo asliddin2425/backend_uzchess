@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { Category } from "../entities/category.entity.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
-import { CategoryCreate } from "../dto/category/category.create.js";
-import { CategoryUpdate } from "../dto/category/category.update.js";
+import { CategoryCreate } from "../dtos/category/category.create.js";
+import { CategoryUpdate } from "../dtos/category/category.update.js";
 
 export const categoryRouter = Router();
 

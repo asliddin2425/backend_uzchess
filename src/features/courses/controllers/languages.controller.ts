@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { Language } from "../entities/language.entity.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
-import { LanguageList } from "../dto/language/language.list.js";
-import { LanguageCreate } from "../dto/language/language.create.js";
-import { LanguageUpdate } from "../dto/language/language.update.js";
+import { LanguageList } from "../dtos/language/language.list.js";
+import { LanguageCreate } from "../dtos/language/language.create.js";
+import { LanguageUpdate } from "../dtos/language/language.update.js";
 
 export const languageRouter = Router();
 

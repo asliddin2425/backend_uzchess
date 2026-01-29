@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { Level } from "../entities/level.entity.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
-import { LevelUpdate } from "../dto/level/level.update.js";
-import { LevelCreate } from "../dto/level/level.create.js";
-import { LevelList } from "../dto/level/level.list.js";
+import { LevelUpdate } from "../dtos/level/level.update.js";
+import { LevelCreate } from "../dtos/level/level.create.js";
+import { LevelList } from "../dtos/level/level.list.js";
 
 export const levelRouter = Router();
 

@@ -73,7 +73,6 @@ user.post(
         if (exists > 0) {
             return res.status(409).json({message: "Username already exists"});
         }
-        // yanayam xavfsiz qilish uchun, SECRET_KEY ham qo'shib yuborish mumkin (PEPPER)
         newUser.password = await argon2.hash(newUser.password + secretKey);
         await User.save(newUser);
         delete newUser.password;
@@ -173,7 +172,6 @@ user.get(
  *                 type: string
  */
 
-
 user.post(
     "/users/login", 
     validateDto(UserLogin),
@@ -206,3 +204,4 @@ user.post(
         return res.status(200).json({accessToken, refreshToken});
         
 })
+
