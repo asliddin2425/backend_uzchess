@@ -1,5 +1,4 @@
 import { IsInt, IsNotEmpty, IsString, Max, max, MaxLength, Min } from "class-validator";
-import { IntegerType } from "typeorm/browser";
 
 export class CourseCreate {
 

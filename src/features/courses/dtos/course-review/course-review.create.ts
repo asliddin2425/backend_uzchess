@@ -13,4 +13,7 @@ export class CourseReviewCreate {
     @IsOptional()
     @MaxLength(1024)
     comment?: string | null;
+
+    // userId will be provided by authenticated middleware
+    userId?: number;
 }

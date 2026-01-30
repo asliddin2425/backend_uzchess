@@ -10,14 +10,14 @@ import { Course } from "./courses.entity.js";
 @Entity("authors")
 export class Author extends BaseModel {
 
-  @Column({ length: 64})
+  @Column({ length: 64,})
   firstName!: string;
 
-  @Column({ length: 64 })
+  @Column({ length: 64,})
   lastName!: string;
 
   @Column({ length: 64, nullable: true })
-  middleName!: string;
+  middleName?: string;
 
   @OneToMany(() => Course, course => course.author)
   courses!: Relation<Course[]>;

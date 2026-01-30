@@ -1,10 +1,18 @@
-import { Router } from "express";
+import { Router, Request } from "express";
 import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
 import { CourseReview } from "../entities/course-review.entity.js";
 import {plainToInstance } from "class-transformer";
 import { CourseReviewList } from "../dtos/course-review/course-review.list.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
 import { CourseReviewCreate } from "../dtos/course-review/course-review.create.js";
+
+declare global {
+    namespace Express {
+        interface Request {
+            user: { id: number };
+        }
+    }
+}
 export const courseReviewRouter = Router();
 
 /**
@@ -62,7 +70,10 @@ courseReviewRouter.post(
     validateDto(CourseReviewCreate), 
     authenticate(),
     async (req, res) => {
-    let newReview: CourseReview = CourseReview.create(req.body)
+    let newReview: CourseReview = CourseReview.create({
+        ...req.body,
+        userId: req.user.id
+    })
     // @ts-ignore
     await  CourseReview.save(newReview);
     return res.status(201).json(newReview)
