@@ -13,7 +13,7 @@ export class User extends BaseModel {
     @Column({length: 64, unique: true})
     login!: string;
 
-    @Column({length: 128})
+    @Column({length: 256})
     password!: string;
 
     @Column({length: 128, nullable: true})

@@ -4,5 +4,5 @@ export class LevelUpdate {
     @IsString()
     @IsOptional()
     @MaxLength(32)
-    title!: string;
+    title?: string;
 }

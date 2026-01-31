@@ -3,6 +3,9 @@ import { Category } from "../entities/category.entity.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
 import { CategoryCreate } from "../dtos/category/category.create.js";
 import { CategoryUpdate } from "../dtos/category/category.update.js";
+import { CategoryList } from "../dtos/category/category.list.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
 export const categoryRouter = Router();
 
@@ -33,7 +36,10 @@ export const categoryRouter = Router();
  *                   updatedAt:
  *                     type: string
  */
-categoryRouter.get("/categories", async (req, res) =>{
+categoryRouter.get(
+    "/categories",
+    validateDto(CategoryList), 
+    async (req, res) =>{
     let categories = await Category.find();
     return res.status(200).json(categories)
 })
@@ -130,6 +136,7 @@ categoryRouter.get("/categories/:id", async (req, res) =>{
  */
 categoryRouter.post(
     "/categories",
+    authenticate(Roles.Admin),
     validateDto(CategoryCreate),
     async (req, res) => {
     try {
@@ -168,7 +175,10 @@ categoryRouter.post(
  *                 message:
  *                   type: string
  */
-categoryRouter.delete("/categories/:id", async (req, res) =>{
+categoryRouter.delete(
+    "/categories/:id", 
+    authenticate(Roles.Admin),
+    async (req, res) =>{
     let id = Number(req.params.id);
     let category = await Category.findOneBy({id: id});
     if(category) {
@@ -234,6 +244,7 @@ categoryRouter.delete("/categories/:id", async (req, res) =>{
 
 categoryRouter.patch(
     "/categories/:id",
+    authenticate(Roles.Admin),
     validateDto(CategoryUpdate),
     async (req, res) => {
     let id = Number(req.params.id);

@@ -4,6 +4,8 @@ import { validateDto } from "../../../core/middlewares/validate-body.middleware.
 import { LevelUpdate } from "../dtos/level/level.update.js";
 import { LevelCreate } from "../dtos/level/level.create.js";
 import { LevelList } from "../dtos/level/level.list.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
 export const levelRouter = Router();
 
@@ -87,7 +89,10 @@ levelRouter.get(
  *                 message:
  *                   type: string
  */
-levelRouter.post("/levels", async (req, res)=> {
+levelRouter.post(
+    "/levels", 
+    authenticate(Roles.Admin),
+    async (req, res)=> {
     try {
         let newLevel: Level = await Level.save(Level.create(req.body));
         return res.status(201).json(newLevel);
@@ -99,7 +104,7 @@ levelRouter.post("/levels", async (req, res)=> {
 /**
  * @swagger
  * /levels/{id}:
- *   post:
+ *   get:
  *     summary: Get level by ID
  *     description: Retrieves a specific level by its ID
  *     tags:
@@ -130,7 +135,7 @@ levelRouter.post("/levels", async (req, res)=> {
  *       404:
  *         description: Level not found
  */
-levelRouter.post(
+levelRouter.get(
     "/levels/:id", 
     validateDto(LevelCreate),
     async (req, res) =>{
@@ -171,7 +176,10 @@ levelRouter.post(
  *                 message:
  *                   type: string
  */
-levelRouter.delete("/levels/:id", async (req, res) =>{
+levelRouter.delete(
+    "/levels/:id",
+    authenticate(Roles.Admin),
+    async (req, res) =>{
     let id = Number(req.params.id);
     let level = await Level.findOneBy({id: id});
     if (level) {
@@ -234,6 +242,7 @@ levelRouter.delete("/levels/:id", async (req, res) =>{
  */
 levelRouter.patch(
     "/levels/:id",
+    authenticate(Roles.Admin),
     validateDto(LevelUpdate), 
     async(req, res) => {
     let id = Number(req.params.id);

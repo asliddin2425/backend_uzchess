@@ -6,6 +6,8 @@ import { CourseCreate } from "../dtos/course/course.create.js";
 import { CourseUpdate } from "../dtos/course/course.update.js";
 import {plainToInstance} from "class-transformer";
 import { CourseList } from "../dtos/course/course.list.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
  export const courseRouter = Router();
 
@@ -54,7 +56,10 @@ import { CourseList } from "../dtos/course/course.list.js";
  *                   updatedAt:
  *                     type: string
  */
-courseRouter.get("/courses", async (req, res) => {
+courseRouter.get(
+    "/courses", 
+    validateDto(CourseList),
+    async (req, res) => {
     let courses = await Course.find();
     let data = plainToInstance(CourseList, courses);
     return res.status(200).json(courses)
@@ -207,6 +212,7 @@ courseRouter.get("/course/:id", async (req, res) =>{
  */
 courseRouter.post(
     "/courses",
+    authenticate(Roles.Admin),
     validateDto(CourseCreate),
     async (req, res) => {
     try {
@@ -248,7 +254,10 @@ courseRouter.post(
  *                 message:
  *                   type: string
  */
-courseRouter.delete("/courses/:id", async (req, res) =>{
+courseRouter.delete(
+    "/courses/:id", 
+    authenticate(Roles.Admin),
+    async (req, res) =>{
     let id = Number(req.params.id);
     let course = await Course.findOneBy({id: id});
     if(course) {
@@ -341,6 +350,7 @@ courseRouter.delete("/courses/:id", async (req, res) =>{
  */
 courseRouter.patch(
     "/courses/:id",
+    authenticate(Roles.Admin),
     validateDto(CourseUpdate),
     async (req, res) =>{
     let id = Number(req.params.id);

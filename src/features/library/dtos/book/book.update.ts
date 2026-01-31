@@ -1,6 +1,6 @@
-import { IsOptional, IsString, MaxLength, IsInt, Min, Max } from "class-validator";
+import { IsInt, IsString, IsOptional, MaxLength, Min , Max} from "class-validator";
 
-export class CourseUpdate {
+export class BookUpdate {
     @IsString()
     @IsOptional()
     @MaxLength(256)

@@ -7,6 +7,8 @@ import {BookReviewList} from "../dtos/book-review/book-review.list.js";
 // import {User} from "../../authentication/entities/user.entity.js";
 // import argon2 from "argon2";
 import {authenticate} from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
+import { BookReviewUpdate } from "../dtos/book-review/book-review.update.js";
 
 export const bookReviewRouter = Router();
 
@@ -117,7 +119,10 @@ bookReviewRouter.post(
  *                     type: string
  *                     nullable: true
  */
-bookReviewRouter.get("/book-reviews", async (req: Request, res: Response) => {
+bookReviewRouter.get(
+    "/book-reviews", 
+    validateDto(BookReviewList),
+    async (req: Request, res: Response) => {
     let reviews = await BookReview.find({relations: ['user', 'book']});
     let data = plainToInstance(BookReviewList, reviews, {excludeExtraneousValues: true});
     return res.status(200).json(data);
@@ -153,7 +158,10 @@ bookReviewRouter.get("/book-reviews", async (req: Request, res: Response) => {
  *                 message:
  *                   type: string
  */
-bookReviewRouter.delete("/book-reviews/:id", authenticate(), async (req: Request, res: Response) => {
+bookReviewRouter.delete(
+    "/book-reviews/:id", 
+    authenticate(Roles.Admin && Roles.User), 
+    async (req: Request, res: Response) => {
     let id = Number(req.params.id);
     let review = await BookReview.findOneBy({ id: id });
     if (review) {
@@ -222,7 +230,11 @@ bookReviewRouter.delete("/book-reviews/:id", authenticate(), async (req: Request
  *                 message:
  *                   type: string
  */
-bookReviewRouter.patch("/book-reviews/:id", authenticate(), async (req: Request, res: Response) => {
+bookReviewRouter.patch(
+    "/book-reviews/:id", 
+    authenticate(),
+    validateDto(BookReviewUpdate),
+    async (req: Request, res: Response) => {
     let id = Number(req.params.id);
     let review = await BookReview.findOneBy({ id: id });
     if (review) {

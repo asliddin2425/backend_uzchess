@@ -5,6 +5,7 @@ import {plainToInstance } from "class-transformer";
 import { CourseReviewList } from "../dtos/course-review/course-review.list.js";
 import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
 import { CourseReviewCreate } from "../dtos/course-review/course-review.create.js";
+import { CourseReviewUpdate } from "../dtos/course-review/course-review.update.js";
 
 declare global {
     namespace Express {
@@ -110,7 +111,10 @@ courseReviewRouter.post(
  *                     type: string
  *                     nullable: true
  */
-courseReviewRouter.get("/course-reviews", async (req, res) => {
+courseReviewRouter.get(
+    "/course-reviews", 
+    validateDto(CourseReviewList),
+    async (req, res) => {
     let reviews = await CourseReview.find({relations: ['user', 'course']});
     let data = plainToInstance(CourseReviewList, reviews, {excludeExtraneousValues: true});
     return res.status(200).json(data);
@@ -145,7 +149,10 @@ courseReviewRouter.get("/course-reviews", async (req, res) => {
  *                 message:
  *                   type: string
  */
-courseReviewRouter.delete("/course-reviews/:id", authenticate(), async (req, res) => {
+courseReviewRouter.delete(
+    "/course-reviews/:id", 
+    authenticate(), 
+    async (req, res) => {
     let id = Number(req.params.id);
     let review = await CourseReview.findOneBy({ id: id });
     if (review) {
@@ -211,7 +218,11 @@ courseReviewRouter.delete("/course-reviews/:id", authenticate(), async (req, res
  *                 message:
  *                   type: string
  */
-courseReviewRouter.patch("/course-reviews/:id", authenticate(), async (req, res) => {
+courseReviewRouter.patch(
+    "/course-reviews/:id",
+    validateDto(CourseReviewUpdate), 
+    authenticate(), 
+    async (req, res) => {
     let id = Number(req.params.id);
     let review = await CourseReview.findOneBy({ id: id });
     if (review) {

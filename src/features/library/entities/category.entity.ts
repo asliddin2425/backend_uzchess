@@ -1,7 +1,7 @@
 import { Entity, Column, OneToMany, Relation } from "typeorm";
 import { BaseModel } from "../../../core/base-model.js";
 import { Book } from "./book.entity.js";
-@Entity("categories")
+@Entity("bookCategories")
 export class Category extends BaseModel{
 
     @Column({length: 32})

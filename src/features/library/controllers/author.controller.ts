@@ -1,5 +1,11 @@
 import {Router} from "express";
 import {Author} from "../entities/author.entity.js";
+import { validateDto } from "../../../core/middlewares/validate-body.middleware.js";
+import { AuthorList } from "../dtos/author/author.list.js";
+import { AuthorCreate } from "../dtos/author/author.create.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
+import { AuthorUpdate } from "../dtos/author/author.update.js";
 
 export const authorRouter = Router();
 
@@ -32,7 +38,10 @@ export const authorRouter = Router();
  *                     type: string
  *                     nullable: true
  */
-authorRouter.get("/authors", async (req, res) => {
+authorRouter.get(
+    "/authors",
+    validateDto(AuthorList),
+    async (req, res) => {
     let authors = await Author.find();
     return res.status(200).json(authors);
 })
@@ -136,7 +145,11 @@ authorRouter.get("/authors/:id", async (req, res) => {
  *                 message:
  *                   type: string
  */
-authorRouter.post("/authors", async (req, res) => {
+authorRouter.post(
+    "/authors", 
+    authenticate(Roles.Admin),
+    validateDto(AuthorCreate),
+    async (req, res) => {
     try {
         let newAuthor: Author = await Author.save(Author.create(req.body));
         return res.status(201).json(newAuthor);
@@ -173,7 +186,10 @@ authorRouter.post("/authors", async (req, res) => {
  *                 message:
  *                   type: string
  */
-authorRouter.delete("/authors/:id", async (req, res) => {
+authorRouter.delete(
+    "/authors/:id", 
+    authenticate(Roles.Admin),
+    async (req, res) => {
     let id = Number(req.params.id);
     let author = await Author.findOneBy({id: id});
     if (author) {
@@ -242,7 +258,11 @@ authorRouter.delete("/authors/:id", async (req, res) => {
  *                 message:
  *                   type: string
  */
-authorRouter.patch("/authors/:id", async (req, res) => {
+authorRouter.patch(
+    "/authors/:id", 
+    authenticate(Roles.Admin),
+    validateDto(AuthorUpdate),
+    async (req, res) => {
     let id = Number(req.params.id);
     let author = await Author.findOneBy({id: id});
     if (author) {

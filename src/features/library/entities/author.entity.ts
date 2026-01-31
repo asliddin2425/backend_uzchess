@@ -2,7 +2,7 @@ import {Column, Entity, OneToMany, Relation} from "typeorm";
 import {BaseModel} from "../../../core/base-model.js";
 import { Book } from "./book.entity.js";
 
-@Entity("authors")
+@Entity("bookAuthors")
 export class Author extends BaseModel {
     @Column({length: 32})
     firstName!: string;

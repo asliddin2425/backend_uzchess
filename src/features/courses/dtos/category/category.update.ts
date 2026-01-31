@@ -4,5 +4,5 @@ export class CategoryUpdate {
     @IsString()
     @IsOptional()
     @MaxLength(32)
-    title!: string;
+    title?: string;
 }

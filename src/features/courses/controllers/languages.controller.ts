@@ -4,6 +4,8 @@ import { validateDto } from "../../../core/middlewares/validate-body.middleware.
 import { LanguageList } from "../dtos/language/language.list.js";
 import { LanguageCreate } from "../dtos/language/language.create.js";
 import { LanguageUpdate } from "../dtos/language/language.update.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
 export const languageRouter = Router();
 
@@ -166,6 +168,7 @@ languageRouter.get("/languages/:id", async (req, res) => {
  */
 languageRouter.post(
     "/languages", 
+    authenticate(Roles.Admin),
     validateDto(LanguageCreate),
     async (req, res) => {
     try {
@@ -272,7 +275,8 @@ languageRouter.delete("/languages/:id", async (req, res) => {
  */
 languageRouter.patch(
     "/languages/:id",
-validateDto(LanguageUpdate), 
+    authenticate(Roles.Admin),
+    validateDto(LanguageUpdate), 
     async (req, res) => {
     let id = Number(req.params.id);
     let language = await Language.findOneBy({ id: id as any });
@@ -286,6 +290,6 @@ validateDto(LanguageUpdate),
         await Language.save(language);
         return res.status(200).json(language);
     } else {
-        return res.status(404).json({ message: "Til topilmadi" });
+        return res.status(404).json({ message: "Not found language" });
     }
 });

@@ -1,9 +1,12 @@
 import {Router, Request, Response} from "express";
 import {validateDto} from "../../../core/middlewares/validate-body.middleware.js";
 import {BookCreate} from "../dtos/book/book.create.js";
+import {BookUpdate} from "../dtos/book/book.update.js";
 import {Book} from "../entities/book.entity.js";
 import {plainToInstance} from "class-transformer";
 import {BookList} from "../dtos/book/book.list.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
 export const bookRouter = Router();
 
@@ -45,6 +48,7 @@ export const bookRouter = Router();
  */
 bookRouter.post(
     "/books",
+    authenticate(Roles.Admin),
     validateDto(BookCreate),
     async (req: Request, res: Response) => {
         let newBook: Book = Book.create(req.body);
@@ -77,6 +81,7 @@ bookRouter.post(
  */
 bookRouter.get(
     "/books",
+    validateDto(BookList),
     async (req: Request, res: Response) => {
         let books = await Book.find();
         let data = plainToInstance(BookList, books);
@@ -111,7 +116,10 @@ bookRouter.get(
  *                 message:
  *                   type: string
  */
-bookRouter.delete("/books/:id", async (req: Request, res: Response) => {
+bookRouter.delete(
+    "/books/:id", 
+    authenticate(Roles.Admin),
+    async (req: Request, res: Response) => {
     let id = Number(req.params.id);
     let book = await Book.findOneBy({id});
     if (!book) {
@@ -120,3 +128,75 @@ bookRouter.delete("/books/:id", async (req: Request, res: Response) => {
     await Book.remove(book);
     return res.status(204).send();
 });
+
+/**
+ * @swagger
+ * /books/{id}:
+ *   patch:
+ *     summary: Partially update a book
+ *     description: Updates specific fields of a book. Only provided fields are updated
+ *     tags:
+ *       - Books
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: The book ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Book successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: number
+ *                 title:
+ *                   type: string
+ *                 updatedAt:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *       404:
+ *         description: Book not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+bookRouter.patch(
+    "/books/:id",
+    authenticate(Roles.Admin),
+    validateDto(BookUpdate),
+    async (req, res) =>{
+    let id = Number(req.params.id);
+    let book = await Book.findOneBy({id: id});
+    if(book) {
+        Object.assign(
+            book,
+            Object.fromEntries(Object.entries(req.body).filter(([key, value]) => value !==null))
+        )
+        await Book.save(book);
+        return res.status(200).json(book);
+    } else {
+        return res.status(404).json({message: "Books with given id not found"})
+    }
+}
+);

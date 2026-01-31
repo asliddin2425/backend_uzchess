@@ -4,6 +4,6 @@ export class SectionUpdate {
     @IsString()
     @IsOptional()
     @MaxLength(32)
-    title!: string;
+    title?: string;
 
 }

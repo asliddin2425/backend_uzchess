@@ -4,10 +4,10 @@ export class LanguageUpdate {
     @IsString()
     @IsOptional()
     @MaxLength(32)
-    title!: string;
+    title?: string;
 
     @IsString()
     @IsOptional()
     @MaxLength(16)
-    code!: string;
+    code?: string;
 }

@@ -5,6 +5,8 @@ import { validateDto } from "../../../core/middlewares/validate-body.middleware.
 import { SectionUpdate } from "../dtos/section/section.update.js";
 import { SectionCreate } from "../dtos/section/section.create.js";
 import { SectionList } from "../dtos/section/section.list.js";
+import { authenticate } from "../../../core/middlewares/authenticate.middleware.js";
+import { Roles } from "../../../core/constants/roles.js";
 
 export const  sectionRouter = Router();
 
@@ -136,6 +138,7 @@ sectionRouter.get("/sections/:id", async (req, res) =>{
  */
 sectionRouter.post(
     "/sections", 
+    authenticate(Roles.Admin),
     validateDto(SectionCreate),
     async (req, res) => {
     try {
@@ -174,7 +177,10 @@ sectionRouter.post(
  *                 message:
  *                   type: string
  */
-sectionRouter.delete("/sections/:id", async (req, res) =>{
+sectionRouter.delete(
+    "/sections/:id", 
+    authenticate(Roles.Admin),
+    async (req, res) =>{
     let id = Number(req.params.id);
     let section = await Section.findOneBy({id: id});
     if (section) {
@@ -236,6 +242,7 @@ sectionRouter.delete("/sections/:id", async (req, res) =>{
  */
 sectionRouter.patch(
     "/sections/:id", 
+    authenticate(Roles.Admin),
     validateDto(SectionUpdate),
     async (req, res) =>{
     let id = Number(req.params.id);

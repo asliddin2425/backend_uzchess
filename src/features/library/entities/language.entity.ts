@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, Relation } from "typeorm";
 import { Book } from "./book.entity.js";
 import { BaseModel } from "../../../core/base-model.js";
 
-@Entity("languages")
+@Entity("BookLanguages")
 
 export class Language extends BaseModel{
 
