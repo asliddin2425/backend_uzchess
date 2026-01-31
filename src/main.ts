@@ -12,6 +12,8 @@ import { sectionRouter } from "./features/courses/controllers/section.controller
 import { languageRouter } from "./features/courses/controllers/languages.controller.js";
 import { uploadsRouter } from "./features/uploads/uploads.controller.js";
 import { courseReviewRouter } from "./features/courses/controllers/course.review.controller.js";
+import { bookReviewRouter } from "./features/library/controllers/book-review.controller.js";
+import { bookRouter } from "./features/library/controllers/book.controller.js";
 
 
 await AppDataSource.initialize();
@@ -28,6 +30,9 @@ app.use("/", levelRouter)
 app.use("/", sectionRouter);
 app.use("/", languageRouter)
 app.use("/", courseReviewRouter)
+app.use("/", bookReviewRouter)
+app.use("/", bookRouter),
+
 
 
 setupSwagger(app);
