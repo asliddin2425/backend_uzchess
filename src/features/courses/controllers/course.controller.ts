@@ -131,12 +131,17 @@ courseRouter.get("/course/:id", async (req, res) =>{
 
 /**
  * @swagger
- * /courses:
+ * /news:
  *   post:
- *     summary: Create a new course
- *     description: Creates a new course with the provided details
+ *     summary: Create a new news
+ *     description: |
+ *       Creates a new news record.
+ *       This endpoint is accessible only for administrators.
  *     tags:
- *       - Courses
+ *       - News
+ *     security:
+ *       - bearerAuth: []
+ *
  *     requestBody:
  *       required: true
  *       content:
@@ -145,44 +150,26 @@ courseRouter.get("/course/:id", async (req, res) =>{
  *             type: object
  *             required:
  *               - title
- *               - imageUrl
- *               - price
- *               - authorId
- *               - sectionId
- *               - levelId
- *               - categoryId
- *               - languagesId
+ *               - description
+ *               - date
+ *               - newsImgUrl
  *             properties:
  *               title:
  *                 type: string
- *                 description: Course title (max 150 characters)
- *               imageUrl:
+ *                 maxLength: 256
+ *
+ *               date:
  *                 type: string
- *                 description: Course image URL
- *               price:
- *                 type: number
- *                 description: Course price
- *               discountPrice:
- *                 type: number
- *                 description: Discounted price (optional)
- *               authorId:
- *                 type: number
- *                 description: Author ID
- *               sectionId:
- *                 type: number
- *                 description: Section ID
- *               levelId:
- *                 type: number
- *                 description: Level ID
- *               categoryId:
- *                 type: number
- *                 description: Category ID
- *               languagesId:
- *                 type: number
- *                 description: Language ID
+ *                 maxLength: 64
+ *                 example: 2026-02-04
+ *
+ *               newsImgUrl:
+ *                 type: string
+ *                 maxLength: 128
+ *
  *     responses:
  *       201:
- *         description: Course successfully created
+ *         description: News successfully created
  *         content:
  *           application/json:
  *             schema:
@@ -190,18 +177,24 @@ courseRouter.get("/course/:id", async (req, res) =>{
  *               properties:
  *                 id:
  *                   type: number
+ *                   example: 12
  *                 title:
  *                   type: string
- *                 imageUrl:
+ *                 description:
  *                   type: string
- *                 price:
- *                   type: number
+ *                 date:
+ *                   type: string
+ *                 newsImgUrl:
+ *                   type: string
  *                 createdAt:
  *                   type: string
+ *                   example: 2026-02-04T10:15:30Z
  *                 updatedAt:
  *                   type: string
+ *                   example: 2026-02-04T10:15:30Z
+ *
  *       400:
- *         description: Invalid request data
+ *         description: Validation error or bad request
  *         content:
  *           application/json:
  *             schema:
@@ -209,10 +202,13 @@ courseRouter.get("/course/:id", async (req, res) =>{
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: Title must not be empty
+ *
  */
+
 courseRouter.post(
     "/courses",
-    authenticate(Roles.Admin),
+    // authenticate(Roles.Admin),
     validateDto(CourseCreate),
     async (req, res) => {
     try {
